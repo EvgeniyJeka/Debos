@@ -8,8 +8,8 @@ class Presentor:
     #Default params used for testing
     hst = '127.0.0.1'
     usr = 'root'
-    pwd = '7417418'
-    db_name = 'play'
+    pwd = '7417418@a'
+    db_name = 'mysql'
     column_length_configurator = 1050
     min_width=150
 
@@ -37,7 +37,8 @@ class Presentor:
     columns_size = 100
 
     def open_window(self,size):
-        """ Opens a window of the provided size
+        """
+        Opens a window of the provided size
                     :size: The required window size
         """
         # Window
@@ -55,6 +56,8 @@ class Presentor:
         hsb.configure(command=self.tree.xview)
         self.tree.configure(xscrollcommand=hsb.set)
         hsb.grid(row=5, column=0, padx=20, pady=20, columnspan=5, sticky=(W + E))
+
+
 
     # # attach a Horizontal (x) scrollbar to the frame
     # treeXScroll = ttk.Scrollbar(content, orient=HORIZONTAL)
@@ -142,15 +145,15 @@ class Presentor:
 
 
 
-    def fill_content(self):
-        """ Setting headers and filling the table selected in current "Presentor" (class method)
-                   :executer: "Executer" type object (pymsql wraper)
-                   :tree: Treeview object, ttk.Treeview(root)
-                   :table: SQL table object
-                   :columns_size: width of each column
-               """
-        set_headers(executer,self.tree,cursor, presentor.table, columns_size)
-        fill_table(executer,self.tree, cursor, presentor.table)
+    # def fill_content(self):
+    #     """ Setting headers and filling the table selected in current "Presentor" (class method)
+    #                :executer: "Executer" type object (pymsql wraper)
+    #                :tree: Treeview object, ttk.Treeview(root)
+    #                :table: SQL table object
+    #                :columns_size: width of each column
+    #            """
+    #     set_headers(executer,self.tree,cursor, presentor.table, columns_size)
+    #     fill_table(executer,self.tree, cursor, presentor.table)
 
 
 

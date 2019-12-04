@@ -7,8 +7,8 @@ import xlrd
 
 hst = '127.0.0.1'
 usr = 'root'
-pwd = '7417418'
-db_name = 'play'
+pwd = '7417418@a'
+db_name = 'mysql'
 
 
 class Executer:
@@ -132,10 +132,10 @@ class Executer:
 
 
             # Add a new row to existing table
-            def add_row(table, cursor):
+            def add_row(self,table, cursor):
                 # cols=[]
 
-                columns = get_columns(table, cursor)
+                columns = self.get_columns(table, cursor)
                 values = []
 
                 for current_column in columns:
@@ -212,18 +212,18 @@ class Executer:
 
 
             #Returns one table record as an object
-            def to_object(table, cursor, line):
+            def to_object(self, table, cursor, line):
                 query = 'select * from ''%s'' where id=''%s'';' % (table, line)
                 cursor.execute(query)
                 record = cursor.fetchall()[0]
-                columns = get_columns(table, cursor)
+                columns = self.get_columns(table, cursor)
 
                 mapped = {}
 
                 for x in range(len(record)):
                     mapped.setdefault(columns[x], record[x])
 
-                result = Dynamic()
+                result = self.Dynamic()
 
                 result.name = str(table)
                 result.properties = columns
@@ -264,11 +264,11 @@ class Executer:
 
             #######################################
 
-
-example = Executer()
-cursor = example.connect_me(hst, usr, pwd, db_name)
-# print(example.lots_of_eggs(cursor,"game"))
-example.print_table('game', cursor)
+#
+# example = Executer()
+# cursor = example.connect_me(hst, usr, pwd, db_name)
+# # print(example.lots_of_eggs(cursor,"game"))
+# example.print_table('game', cursor)
 
 
             # print (show_tables('game',cursor))

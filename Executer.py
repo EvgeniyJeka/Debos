@@ -3,13 +3,6 @@ from tabulate import tabulate
 import xlwt
 import xlrd
 
-##conn=pymysql.connect(host='127.0.0.1',user='root',password='7417418',db='play')
-
-hst = '127.0.0.1'
-usr = 'root'
-pwd = '7417418@a'
-db_name = 'mysql'
-
 
 class Executer:
 

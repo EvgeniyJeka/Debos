@@ -5,11 +5,7 @@ from tkinter import ttk
 
 class Presentor:
 
-    #Default params used for testing
-    hst = '127.0.0.1'
-    usr = 'root'
-    pwd = '7417418@a'
-    db_name = 'mysql'
+
     column_length_configurator = 1050
     min_width=150
 
@@ -38,8 +34,10 @@ class Presentor:
 
     def open_window(self,size):
         """
+
         Opens a window of the provided size
-                    :size: The required window size
+        :size: The required window size
+
         """
         # Window
         self.root = Tk()
@@ -162,7 +160,7 @@ class Presentor:
 
         """
         # Window - END
-        self.root.mainloop()
+        self.root.destroy()
 
 
     def test_method(self):

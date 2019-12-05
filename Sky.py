@@ -5,13 +5,14 @@ from tkinter import ttk
 import Pmw
 
 
+# This class is the upper level of the app. It's instance is used to run and manage the DeBos app.
 class Sky(object):
 
     def __init__(self):
 
-        # Used classes (
+        # Executer instance - contains methods required for work with DB.
         self.executor = Executer()
-        # self.presentor = ""
+
 
         # Enteries open to user input
         self.entry_1 = ""
@@ -19,13 +20,16 @@ class Sky(object):
         self.entry_3 = ""
         self.entry_4 = ""
 
-        self.variable = ""
+        # Variable used to create drop down menu
+        self.dropdown_menu = ""
 
 
         # Creating a window and setting it's size
         self.root = Tk()
         self.root.geometry("400x400")
         self.root.resizable(0, 0)
+
+        # Tooltips integrated.
         Pmw.initialise(self.root)
 
         # Used listbox - for tables presentation and selection
@@ -37,7 +41,7 @@ class Sky(object):
         self.Head_label = Label(self.root, text="Debos version 1.2", fg="white", bg="blue", font=("", 20))
         self.Head_label.grid(row=0, column=0)
         self.Head_label.grid(columnspan=3)
-        # root.columnconfigure(0, weight=1)
+
 
         # Adding input fields - they will be used to receive the information required for connection to DB
 
@@ -67,10 +71,10 @@ class Sky(object):
         self.entry_4 = Entry(self.root, width="35")
         self.label_4.grid(row=4, column=0, pady=5, padx=1, sticky=W)
         self.entry_4.grid(row=4, column=1, sticky=E)
-        self.entry_4.insert(0, 'play')
+        self.entry_4.insert(0, 'mysql')
 
         # Connect button
-        self.button_connect = Button(self.root, text= "Connect", bg="purple", fg="white", height="2",width="10",command = lambda:self.connect())
+        self.button_connect = Button(self.root, text= "Connect", bg="purple", fg="white", height="2",width="10", command = lambda:self.connect())
         self.button_connect.grid(row=5, column=1)
 
         # Select button
@@ -78,65 +82,75 @@ class Sky(object):
         self.button_select.grid(row=6, column=1)
 
 
-
-    #Connecting to the selected DB, all the required input gathered from UI
     def connect(self):
-        print("Log: Connect")
-        # executor = Executer()
+        """
 
-        hst = self.entry_1.get()
-        usr = self.entry_2.get()
-        pwd = self.entry_3.get()
-        db_name = self.entry_4.get()
+         Connecting to the selected DB, all the required information is taken from user input via UI.
+
+        """
+        print("Log: Connect")
+
+        # Taking the data from user input.
+        self.hst = self.entry_1.get()
+        self.usr = self.entry_2.get()
+        self.pwd = self.entry_3.get()
+        self.db_name = self.entry_4.get()
 
         # Create a Presentor
-        self.presentor = Presentor(hst, usr, pwd, db_name, self.executor)
-
+        self.presentor = Presentor(self.hst, self.usr, self.pwd, self.db_name, self.executor)
 
         # Establish a connection
         self.presentor.establish_connection(self.executor)
 
         #Present available tables
         available_tables = self.executor.show_tables(self.presentor.cursor)
-        self.tables_list.delete(0,END)
+        self.tables_list.delete(0, END)
         self.tables_list.insert(END, *available_tables)
-
 
 
     #Presents the selected table
     def select_table(self):
+        """
 
-        self.selected_table = self.tables_list.get(self.tables_list.curselection())
-        print("Log: Selected table: "+str(self.selected_table))
+        Method used to build the window and present the selected table and all other components - buttons e.t.c.
+
+        """
+        try:
+            self.selected_table = self.tables_list.get(self.tables_list.curselection())
+            print("Log: Selected table: "+str(self.selected_table))
+
+        except TclError as e:
+            print(f"Log: Failed to present the table. Terminating.")
+
 
         # Window size
         hight = 700
         width = 1300
         size = '%sx%s' % (width, hight)
-        columns_size = 100
 
-        hst = self.entry_1.get()
-        usr = self.entry_2.get()
-        pwd = self.entry_3.get()
-        db_name = self.entry_4.get()
+        try:
 
-        # Create a Presentor
-        # presentor = Presentor(hst, usr, pwd, db_name, self.executor)
-        self.presentor.establish_connection(self.executor)
+            # Open a window
+            self.presentor.open_window(size)
+            self.presentor.select_table(self.selected_table)
 
-        # Open a window
-        self.presentor.open_window(size)
-        self.presentor.select_table(self.selected_table)
+        except AttributeError:
+            print("Log: Must connect to DB before selecting a table.")
+            return
 
         # Set headers
-        self.presentor.set_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table, 120)
+        self.presentor.set_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor,
+                                   self.presentor.table, 120)
 
-        #Fill table
-        self.presentor.fill_table(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table)
+        # Fill table
+        self.presentor.fill_table(self.presentor.executer, self.presentor.tree, self.presentor.cursor,
+                                  self.presentor.table)
+
+        # Buttons are created, relevant methods are connected to each button.
 
         #Button Find By ID (OB - 1)
-        self.button_find_by_id = Button(self.presentor.root, text="Find Element By ID", bg="grey", fg="white", height="1", width="15", command = lambda:self.find_by_id())
-        self.button_find_by_id.grid(row=6,column=0, padx=20, pady=5, sticky=W)
+        self.button_clear_line = Button(self.presentor.root, text="Clear Line", bg="green", fg="white", height="1", width="15", command = lambda: self.clear_line())
+        self.button_clear_line.grid(row=6, column=0, padx=20, pady=5, sticky=W)
 
         #Button Find By Param (OB - 2)
         self.button_find = Button(self.presentor.root, text="Find By Selected Parameter", bg="grey", fg="white", height="1", width="20", command = lambda:self.find_by_param())
@@ -161,10 +175,14 @@ class Sky(object):
 
 
         #Drop Box that contains all table columns
-        self.variable = StringVar(self.presentor.root)
-        self.variable.set("Columns")  # default value
+        self.dropdown_menu = StringVar(self.presentor.root)
+        self.dropdown_menu.set("Columns")  # default value
+
+        # Columns are taken from the table
         columns = self.executor.get_columns(self.presentor.table, self.presentor.cursor)
-        w = OptionMenu(self.presentor.root, self.variable, *columns)
+
+        # Header names used in drop down menu.
+        w = OptionMenu(self.presentor.root, self.dropdown_menu, *columns)
         w.grid(row=8, column=0, padx=1, pady=5, sticky=E)
         w.config(width = 18, bg = "blue", fg="white")
 
@@ -190,12 +208,20 @@ class Sky(object):
 
     #Show only
     def show_only(self):
-        print("Test - show only")
+        """
+
+        This method is used to present only the selected columns from all table content.
+
+        """
+        print("Log: Show only")
         input = self.request_input.get()
+
+        input = input.replace(" ", "")
         elements = input.split(",")
 
         headers = self.executor.get_columns(self.presentor.table, self.presentor.cursor)
 
+        # Filtering table columns, saving only the columns selected by the user.
         for x in elements:
             if x not in headers:
                 print(F"No such column - {x}")
@@ -204,18 +230,14 @@ class Sky(object):
                 return
 
         result = self.executor.show_only(self.selected_table, self.presentor.cursor,input)
-
-        ####### Experimental ########
-
         self.presentor.customize_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table, 120, elements)
 
-        ####### Experimental ########
 
         # Clearing the table to present the result
         for i in self.presentor.tree.get_children():
             self.presentor.tree.delete(i)
 
-        #Entering content
+        #Inserting content
         counter = 0
         table_content = result
         for line in table_content:
@@ -224,11 +246,29 @@ class Sky(object):
 
     #Select column
     def select_column(self):
-        self.request_input.insert(10, self.variable.get())
+        """
 
+        Method used to select column name label from drop down menu.
+
+        """
+        self.request_input.insert(10, self.dropdown_menu.get())
+
+    #Clear Command Line
+    def clear_line(self):
+        """
+
+        Method used to clean the command line.
+
+        """
+        self.request_input.delete(0, 'end')
 
     #Export
     def export(self):
+        """
+
+        Method used to export table data to Excel file
+
+        """
         cursor = self.presentor.cursor
         table = self.presentor.table
         file_name = str(self.presentor.table)+".xls"
@@ -237,67 +277,24 @@ class Sky(object):
         self.request_input.insert(10, 'Table exported!')
 
 
-    #Restore
     def restore(self):
+        """
 
-        # Clearing the table to present the result
-        for i in self.presentor.tree.get_children():
-            self.presentor.tree.delete(i)
+        Restores the original table view
 
-
-        #Since some of the columns might be removed by previous operations we create new Tree object
-        self.presentor.tree = ttk.Treeview(self.presentor.root, heigh=20)
-        self.presentor.tree.grid(row=4, column=0, padx=20)
-        self.presentor.tree.grid(columnspan=5)
-
-        #We are restoring the original table headers
-        self.presentor.set_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table, 120)
-
-        #We are filling the table with it's original content.
-        self.presentor.fill_table(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table)
-        self.request_input.delete(0, 'end')
-
-
-
-
-    #Method Find By ID
-    def find_by_id(self):
-        id = self.request_input.get(self)
-        if len(id) < 1:
-            self.request_input.insert(10, 'Cannot be empty!')
-            return
-        elif id == 'Cannot be empty!' or id=='No ID column!':
-            self.request_input.delete(0, 'end')
-            return
-
-        column_names = self.executor.get_columns(self.selected_table, self.presentor.cursor)
-
-        if id not in column_names:
-            self.request_input.delete(0, 'end')
-            self.request_input.insert(10, 'No ID column!')
-            return
-
-        print("Log: looking for record with ID " + str(id))
-        result = self.executor.find_by_id(self.selected_table, self.presentor.cursor, id)
-        print(result)
-
-        #Clearing the table to present the result
-        for i in self.presentor.tree.get_children():
-            self.presentor.tree.delete(i)
-
-        #Entering content
-        counter = 0
-        table_content = result
-        for line in table_content:
-            self.presentor.tree.insert('', 'end', text=counter, values=line)
-            counter += 1
-
+        """
+        self.presentor.close_window()
+        self.select_table()
 
 
 
     #Method Run DB Query
     def run_query(self):
+        """
 
+        Method used to run user's SQL query entered to Command Line.
+
+        """
         query = self.request_input.get()
         if len(query)<1 :
             self.request_input.insert(10, 'Cannot be empty!')
@@ -336,6 +333,13 @@ class Sky(object):
 
     #Limit by - present only limited amount of table records
     def limit_by(self):
+        """
+
+        Method is used to limit the amount of presented entries.
+
+        """
+        print("Log: Limit By method used.")
+
         # Input - the amount of records to be presented
         limit = self.request_input.get()
 
@@ -354,21 +358,26 @@ class Sky(object):
             self.request_input.insert(10, 'Please enter a numeric value')
             return
 
+        # Clearing the table to present the result
+        for i in self.presentor.tree.get_children():
+            self.presentor.tree.delete(i)
 
-
-            # Clearing the table to present the result
-            for i in self.presentor.tree.get_children():
-                self.presentor.tree.delete(i)
-
-            counter = 0
-            table_content = result
-            for line in table_content:
-                self.presentor.tree.insert('', 'end', text=counter, values=line)
-                counter += 1
+        counter = 0
+        table_content = result
+        for line in table_content:
+            self.presentor.tree.insert('', 'end', text=counter, values=line)
+            counter += 1
 
 
     # Order by - ordering the table by selected column. Order is changed each time.
     def order_by(self):
+        """
+
+        Method is used to sort the table by the selected column.
+        User input is taken from UI.
+
+
+        """
         print("Log: Order By")
 
         #Input - the column by which the table is sorted
@@ -379,7 +388,6 @@ class Sky(object):
         elif column =='Cannot be empty!':
             self.request_input.delete(0, 'end')
             return
-
 
         try:
             result = self.executor.order_by_column(self.selected_table, self.presentor.cursor,column, self.presentor.order)
@@ -411,6 +419,13 @@ class Sky(object):
 
     #Method "Find By Param"
     def find_by_param(self):
+        """
+
+        Method is used to search the table by any selected parameter.
+        Any column can be used for this purpose.
+
+
+        """
         print("Log: Find by param")
         input = self.request_input.get()
         elements = input.split("=")
@@ -435,13 +450,15 @@ class Sky(object):
             counter += 1
 
 
-        ############# Tooltips attached to buttons ###############
-
     def tool_tip(self):
+        """
 
+        This method us used to bind tooltips to buttons.
+
+        """
         # Button Find By ID tooltip (OB - 1)
         tooltip_find_by_id = Pmw.Balloon(self.presentor.root)
-        tooltip_find_by_id.bind(self.button_find_by_id, "This option can be used if a table has an ID column. Enter the ID and click on this button")
+        tooltip_find_by_id.bind(self.button_clear_line, "Clear the command line")
 
         # Button Find By Param tooltip (OB - 2)
         tooltip_find = Pmw.Balloon(self.presentor.root)
@@ -470,15 +487,13 @@ class Sky(object):
 
         # Button Show Only (OB - 8)
         show_only_button_tooltip = Pmw.Balloon(self.presentor.root)
-        show_only_button_tooltip.bind(self.button_show_only, "Choose the columns you want to be presented: %column name%, %column name%,%column name%")
+        show_only_button_tooltip.bind(self.button_show_only, "Choose the columns you want to be presented separated by comma: %column name%, %column name%,%column name%")
 
         # Button Show Only (OB - 9)
         limit_button_tooltip = Pmw.Balloon(self.presentor.root)
         show_only_button_tooltip.bind(self.button_limit, "Choose how many entires do you want to be presented")
 
 
-        # #Close the window
-        # self.presentor.close_window()
 
 
 if __name__ == "__main__":

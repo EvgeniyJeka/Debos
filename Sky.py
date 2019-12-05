@@ -1,7 +1,6 @@
 from Executer import *
 from presentor import *
 from tkinter import *
-from tkinter import ttk
 import Pmw
 
 
@@ -81,6 +80,8 @@ class Sky(object):
         self.button_select = Button(self.root, text= "Select Table", bg="green", fg="white", height="2",width="10", command = lambda:self.select_table())
         self.button_select.grid(row=6, column=1)
 
+        self.connected = False
+
 
     def connect(self):
         """
@@ -96,16 +97,24 @@ class Sky(object):
         self.pwd = self.entry_3.get()
         self.db_name = self.entry_4.get()
 
-        # Create a Presentor
-        self.presentor = Presentor(self.hst, self.usr, self.pwd, self.db_name, self.executor)
+        try:
 
-        # Establish a connection
-        self.presentor.establish_connection(self.executor)
+            # Create a Presentor
+            self.presentor = Presentor(self.hst, self.usr, self.pwd, self.db_name, self.executor)
 
-        #Present available tables
-        available_tables = self.executor.show_tables(self.presentor.cursor)
-        self.tables_list.delete(0, END)
-        self.tables_list.insert(END, *available_tables)
+            # Establish a connection
+            self.presentor.establish_connection(self.executor)
+
+            # Present available tables
+            available_tables = self.executor.show_tables(self.presentor.cursor)
+            self.tables_list.delete(0, END)
+            self.tables_list.insert(END, *available_tables)
+
+            self.connected = True
+
+        except Exception:
+            print("Log: Error - failed to connect to DB.")
+            return
 
 
     #Presents the selected table
@@ -115,7 +124,17 @@ class Sky(object):
         Method used to build the window and present the selected table and all other components - buttons e.t.c.
 
         """
+
+        if self.connected == False:
+            print("Log: Error - must connect to DB before selecting a table.")
+            return
+
+
         try:
+            if self.tables_list.curselection() == ():
+                print("Log: Error - no table is selected from the list.")
+                return
+
             self.selected_table = self.tables_list.get(self.tables_list.curselection())
             print("Log: Selected table: "+str(self.selected_table))
 
@@ -173,6 +192,10 @@ class Sky(object):
         self.button_columns = Button(self.presentor.root, text="Select", bg="purple", fg="white", height="1", width="10", command=lambda:self.select_column())
         self.button_columns.grid(row=8, column=1, padx=1, pady=5, sticky=W)
 
+        # Button Columns (OB - 7)
+        self.button_comma = Button(self.presentor.root, text="Comma", bg="Black", fg="white", height="1",width="10", command=lambda: self.insert_comma())
+        self.button_comma.grid(row=8, column=1, padx=1, pady=5)
+
 
         #Drop Box that contains all table columns
         self.dropdown_menu = StringVar(self.presentor.root)
@@ -183,7 +206,7 @@ class Sky(object):
 
         # Header names used in drop down menu.
         w = OptionMenu(self.presentor.root, self.dropdown_menu, *columns)
-        w.grid(row=8, column=0, padx=1, pady=5, sticky=E)
+        w.grid(row=8, column=0, padx=0, pady=5, sticky=E)
         w.config(width = 18, bg = "blue", fg="white")
 
         # Button Export (OB - 7)
@@ -230,7 +253,7 @@ class Sky(object):
                 return
 
         result = self.executor.show_only(self.selected_table, self.presentor.cursor,input)
-        self.presentor.customize_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table, 120, elements)
+        self.presentor.customize_headers(self.presentor.executer, self.presentor.tree, self.presentor.cursor, self.presentor.table, elements)
 
 
         # Clearing the table to present the result
@@ -251,7 +274,20 @@ class Sky(object):
         Method used to select column name label from drop down menu.
 
         """
-        self.request_input.insert(10, self.dropdown_menu.get())
+        insert_after = len(self.request_input.get()) + 1
+        self.request_input.insert(insert_after, self.dropdown_menu.get())
+
+    # Insert comma separator
+    def insert_comma(self):
+        """
+
+        Method used to add comma separator after the last string in command line
+
+        """
+        insert_after = len(self.request_input.get()) + 1
+        self.request_input.insert(insert_after,", ")
+
+
 
     #Clear Command Line
     def clear_line(self):

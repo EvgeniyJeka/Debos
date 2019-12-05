@@ -20,11 +20,12 @@ class Executer:
                     cursor = conn.cursor()
                 # Wrong Credentials error
                 except pymysql.err.OperationalError:
-                    print("Wrong Credentials or Host")
+                    print("Log: Error - Wrong Credentials or Host")
+                    return
 
                 # Wrong DB name error
                 except pymysql.err.InternalError:
-                    print("Unknown Database")
+                    print("Log: Error - Unknown Database")
 
                 return cursor
 
@@ -239,10 +240,11 @@ class Executer:
 
 
             def lots_of_eggs(self, cursor, table):
-                """Get table content as a tuple of tuples
+                """
+                Get table content as a tuple of tuples
 
-                       :cursor: pymysql cursor variable
-                       :table: SQL table object
+                :cursor: pymysql cursor variable
+                :table: SQL table object
                 """
                 query = 'select * from ''%s'';' % (table)
                 cursor.execute(query)

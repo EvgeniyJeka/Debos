@@ -1,4 +1,3 @@
-from Executer import *
 from tkinter import *
 from tkinter import ttk
 
@@ -9,17 +8,17 @@ class Presentor:
     column_length_configurator = 1050
     min_width=150
 
-    #Variable used to check in which order should the column be sorted (asc/desc)
-    order = 0
+    # #Variable used to check in which order should the column be sorted (asc/desc)
+    # order = 0
+    #
+    # tree = ""  #Tree parameter used for "Tree" table presentation
+    # root = ""  #"Root" is used for python window creation
+    # executer = "" #Executor type object is used to perform actions in MySQL DB (pymysql) - a wraper.
+    # cursor = ""   #Cursor is the tool used directly to perform actions in MySQL DB
+    # table= ""  #Selected table
 
-    tree = ""  #Tree parameter used for "Tree" table presentation
-    root = ""  #"Root" is used for python window creation
-    executer = "" #Executor type object is used to perform actions in MySQL DB (pymysql) - a wraper.
-    cursor = ""   #Cursor is the tool used directly to perform actions in MySQL DB
-    table= ""  #Selected table
 
-
-    def __init__(self,hst,usr,pwd,db_name,executer):
+    def __init__(self, hst, usr, pwd, db_name, executer):
         self.hst = hst
         self.usr = usr
         self.pwd = pwd
@@ -67,33 +66,42 @@ class Presentor:
 
 
     def select_table(self,table):
-        """ Table setter
-                           :table: The selected table that is assigned to the current presentor
+        """
+
+        Table setter
+        :table: The selected table that is assigned to the current presentor
 
         """
         self.table = table
 
 
     def establish_connection(self,executer):
-        """ Uses an "executer" type object and presentor instance variables to establish connection to DB
-                           :executer: "Executer" type object (pymsql wraper)
-                           :self.hst: Host (inst. var)
-                           :self.usr: Username (inst. var)
-                           :self.pwd: Password (inst. var)
-                           :self.db_name: selected DB name (inst. var)
-         """
+        """
+
+        Uses an "executer" type object and presentor instance variables to establish connection to DB
+
+       :executer: "Executer" type object (pymsql wraper)
+       :self.hst: Host (inst. var)
+       :self.usr: Username (inst. var)
+       :self.pwd: Password (inst. var)
+       :self.db_name: selected DB name (inst. var)
+
+        """
         self.cursor = self.executer.connect_me(self.hst, self.usr, self.pwd, self.db_name)
 
 
     #Set the header of each column to be table header
     def set_headers(self,executer, tree, cursor, table, columns_size):
-        """ Setting the headers of each column, values taken from the provided table
-                    :executer: "Executer" type object (pymsql wraper)
-                    :tree: Treeview object, ttk.Treeview(root)
-                    :cursor: pymysql cursor variable
-                    :table: SQL table object
-                    :columns_size: width of each column
         """
+        Setting the headers of each column, values taken from the provided table
+
+        :executer: "Executer" type object
+        :tree: Treeview object, ttk.Treeview(root)
+        :cursor: pymysql cursor variable
+        :table: SQL table object
+        :columns_size: width of each column
+        """
+
         # Getting headers
         headers = executer.get_columns(table, cursor)
         tree["columns"] = headers
@@ -111,12 +119,24 @@ class Presentor:
 ################# Experimental segment, should present only the headers of selected columns of the table ##########
 
     #Setting custom headers to a table - EXPERIMENTAL
-    def customize_headers(self,executer, tree, cursor, table, columns_size,custom_headers):
+    def customize_headers(self,executer, tree, cursor, table,custom_headers):
+        """
 
+        This method is used when the user selects several columns to be presented.
+        It is used to modify the table headers and present only the names of the selected
+        columns.
+
+
+        :param executer: "Executer" type object
+        :param tree: Treeview object, ttk.Treeview(root)
+        :param cursor:  pymysql cursor variable
+        :param table: SQL table object
+        :param custom_headers: list of column names that are to be presented.
+        """
         headers = executer.get_columns(table, cursor)
         tree["columns"] = custom_headers
 
-        ###EXPERIMENTAL!!
+
         set_width = int(self.column_length_configurator / len(headers))
 
         # Setting columns width and headers
@@ -124,16 +144,20 @@ class Presentor:
             tree.column(column, width=set_width, minwidth=self.min_width)
             tree.heading(column, text=column)
 
-################# Experimental segment, should present only the headers of selected columns of the table ##########
+
 
 
 
     def fill_table(self, executer, tree, cursor, table):
-        """ Filling the provided table
-            :executer: "Executer" type object (pymsql wraper)
-            :tree: Treeview object, ttk.Treeview(root)
-            :cursor: pymysql cursor variable
-            :table: SQL table object
+        """
+
+        Filling the provided table with data that cursor currently contains.
+
+        :executer: "Executer" type object
+        :tree: Treeview object, ttk.Treeview(root)
+        :cursor: pymysql cursor variable
+        :table: SQL table object
+
         """
         counter = 0
         table_content = executer.lots_of_eggs(cursor, table)
@@ -156,7 +180,9 @@ class Presentor:
 
 
     def close_window(self):
-        """ Closes the window that runs in current Presentor
+        """
+
+        Closes the window that runs in current Presentor
 
         """
         # Window - END
@@ -166,7 +192,7 @@ class Presentor:
     def test_method(self):
        return "Presentor is available"
 
-    test = "It's me"
+    # test = "It's me"
 
 
    ##############

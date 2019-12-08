@@ -8,14 +8,14 @@ class Presentor:
     column_length_configurator = 1050
     min_width=150
 
-    # #Variable used to check in which order should the column be sorted (asc/desc)
-    # order = 0
-    #
-    # tree = ""  #Tree parameter used for "Tree" table presentation
-    # root = ""  #"Root" is used for python window creation
-    # executer = "" #Executor type object is used to perform actions in MySQL DB (pymysql) - a wraper.
-    # cursor = ""   #Cursor is the tool used directly to perform actions in MySQL DB
-    # table= ""  #Selected table
+    #Variable used to check in which order should the column be sorted (asc/desc)
+    order = 0
+
+    tree = ""  #Tree parameter used for "Tree" table presentation
+    root = ""  #"Root" is used for python window creation
+    executer = "" #Executor type object is used to perform actions in MySQL DB (pymysql) - a wraper.
+    cursor = ""   #Cursor is the tool used directly to perform actions in MySQL DB
+    table= ""  #Selected table
 
 
     def __init__(self, hst, usr, pwd, db_name, executer):
@@ -55,16 +55,6 @@ class Presentor:
         hsb.grid(row=5, column=0, padx=20, pady=20, columnspan=5, sticky=(W + E))
 
 
-
-    # # attach a Horizontal (x) scrollbar to the frame
-    # treeXScroll = ttk.Scrollbar(content, orient=HORIZONTAL)
-    # treeXScroll.configure(command=myTreeView.xview)
-    # myTreeView.configure(xscrollcommand=treeXScroll.set)
-
-
-
-
-
     def select_table(self,table):
         """
 
@@ -80,7 +70,7 @@ class Presentor:
 
         Uses an "executer" type object and presentor instance variables to establish connection to DB
 
-       :executer: "Executer" type object (pymsql wraper)
+       :executer: "Executer" type object
        :self.hst: Host (inst. var)
        :self.usr: Username (inst. var)
        :self.pwd: Password (inst. var)
@@ -90,7 +80,7 @@ class Presentor:
         self.cursor = self.executer.connect_me(self.hst, self.usr, self.pwd, self.db_name)
 
 
-    #Set the header of each column to be table header
+    # Sets the header of each column to be table header
     def set_headers(self,executer, tree, cursor, table, columns_size):
         """
         Setting the headers of each column, values taken from the provided table
@@ -106,7 +96,7 @@ class Presentor:
         headers = executer.get_columns(table, cursor)
         tree["columns"] = headers
 
-        ###EXPERIMENTAL!!
+        # Setting width to all column headers basing on columns amount.
         set_width = int(self.column_length_configurator/len(headers))
 
 
@@ -116,9 +106,7 @@ class Presentor:
             tree.heading(column, text=column)
 
 
-################# Experimental segment, should present only the headers of selected columns of the table ##########
-
-    #Setting custom headers to a table - EXPERIMENTAL
+    #Setting custom headers to a table
     def customize_headers(self,executer, tree, cursor, table,custom_headers):
         """
 
@@ -145,9 +133,6 @@ class Presentor:
             tree.heading(column, text=column)
 
 
-
-
-
     def fill_table(self, executer, tree, cursor, table):
         """
 
@@ -167,18 +152,6 @@ class Presentor:
 
 
 
-    # def fill_content(self):
-    #     """ Setting headers and filling the table selected in current "Presentor" (class method)
-    #                :executer: "Executer" type object (pymsql wraper)
-    #                :tree: Treeview object, ttk.Treeview(root)
-    #                :table: SQL table object
-    #                :columns_size: width of each column
-    #            """
-    #     set_headers(executer,self.tree,cursor, presentor.table, columns_size)
-    #     fill_table(executer,self.tree, cursor, presentor.table)
-
-
-
     def close_window(self):
         """
 
@@ -192,44 +165,4 @@ class Presentor:
     def test_method(self):
        return "Presentor is available"
 
-    # test = "It's me"
 
-
-   ##############
-
-# #Create an Executor
-# executor = Executer()
-#
-# #Create a Presentor
-# presentor = Presentor('127.0.0.1','root','7417418','play',executor)
-#
-#
-#
-# # Window size
-# hight = 600
-# width = 800
-# size = '%sx%s' % (width, hight)
-# columns_size = 100
-#
-# #Open a window
-# presentor.open_window(size)
-#
-# #Establish connection
-# presentor.establish_connection(executor)
-#
-# #Show tables
-# print(executor.show_tables(presentor.cursor))
-#
-# #Select a table
-# presentor.select_table("game")
-#
-# #Set headers
-# presentor.set_headers(presentor.executer, presentor.tree, presentor.cursor, presentor.table,120)
-#
-# #Fill table
-# presentor.fill_table(presentor.executer, presentor.tree, presentor.cursor, presentor.table)
-#
-# #Close the window
-# presentor.close_window()
-#
-# print("Done")

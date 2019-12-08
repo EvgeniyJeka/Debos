@@ -398,11 +398,16 @@ class Sky(object):
         for i in self.presentor.tree.get_children():
             self.presentor.tree.delete(i)
 
-        counter = 0
-        table_content = result
-        for line in table_content:
-            self.presentor.tree.insert('', 'end', text=counter, values=line)
-            counter += 1
+        try:
+            counter = 0
+            table_content = result
+            for line in table_content:
+                self.presentor.tree.insert('', 'end', text=counter, values=line)
+                counter += 1
+
+        except TypeError:
+            print("Log: Limit By - invalid input")
+            self.restore()
 
 
     # Order by - ordering the table by selected column. Order is changed each time.
@@ -437,11 +442,16 @@ class Sky(object):
         for i in self.presentor.tree.get_children():
             self.presentor.tree.delete(i)
 
-        counter = 0
-        table_content = result
-        for line in table_content:
-            self.presentor.tree.insert('', 'end', text=counter, values=line)
-            counter += 1
+        try:
+            counter = 0
+            table_content = result
+            for line in table_content:
+                self.presentor.tree.insert('', 'end', text=counter, values=line)
+                counter += 1
+
+        except TypeError:
+            print("Log: Order By - invalid input.")
+            self.restore()
 
         #Changing the "order" param to the opposite value to the sorting will work correctly each time
         if self.presentor.order == 0:
@@ -464,6 +474,7 @@ class Sky(object):
         """
         print("Log: Find by param")
         input = self.request_input.get()
+        input = input.replace(" ","")
         elements = input.split("=")
 
         if len(elements)!= 2:

@@ -1,12 +1,10 @@
 import pymysql
 from tabulate import tabulate
 import xlwt
-import xlrd
+
 
 
 class Executer:
-
-            saved = ""
 
 
             def __init__(self):
@@ -18,6 +16,7 @@ class Executer:
                 try:
                     conn = pymysql.connect(host=hst, user=usr, password=pwd, db=db_name, autocommit='True')
                     cursor = conn.cursor()
+
                 # Wrong Credentials error
                 except pymysql.err.OperationalError:
                     print("Log: Error - Wrong Credentials or Host")
@@ -54,7 +53,6 @@ class Executer:
             # Print a table
             def print_table(self,table, cursor):
                 column_names = self.get_columns(table, cursor)
-                # list_in_line(column_names)
 
                 # Getting the table from DB and saving it to "table"
                 query = 'select * from ''%s'';' % table
@@ -89,11 +87,15 @@ class Executer:
             # Find a raw in table by a parameter provided
             def find_by_param(self,table, cursor, param, value):
                 query = 'select * from ''%s'' WHERE %s="%s";' % (table, param, value)
-                # query='select * from ''game'' WHERE name="Edge";'
-                cursor.execute(query)
-                result = cursor.fetchall()
-                print(tabulate(result, headers=self.get_columns(table, cursor), tablefmt='orgtbl'))
-                return result
+
+                try:
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    print(tabulate(result, headers=self.get_columns(table, cursor), tablefmt='orgtbl'))
+                    return result
+
+                except pymysql.err.ProgrammingError:
+                    print("Log: Executer - Failed to execute the given query, invalid parameter is provided.")
 
 
             #Order the table by provided column
@@ -103,37 +105,49 @@ class Executer:
                     query = f"select * from {table} order by {column} desc;"
                 else:
                     query = f"select * from {table} order by {column} asc;"
-                cursor.execute(query)
-                result = cursor.fetchall()
-                return result
+
+                try:
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    return result
+
+                except pymysql.err.ProgrammingError:
+                    print("Log: Executer - Failed to execute the given query, invalid parameter is provided.")
 
             #Show only the requested columns
             def show_only(self,table,cursor,columns):
 
-                query = F"select {columns} from {table}"
-                cursor.execute(query)
-                result = cursor.fetchall()
-                return result
+                try:
+                    query = F"select {columns} from {table}"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    return result
+
+                except pymysql.err.ProgrammingError:
+                    print("Log: Executer - Failed to execute the given query, invalid parameter is provided.")
 
             #Present only given number of enteries from the table
             def limit_by(self, table, cursor, limited_by):
 
-                query = F"select * from {table} limit {limited_by}"
-                cursor.execute(query)
-                result = cursor.fetchall()
-                return result
+                try:
+                    query = F"select * from {table} limit {limited_by}"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    return result
+
+                except pymysql.err.ProgrammingError:
+                    print("Log: Executer - Failed to execute the given query, invalid parameter is provided.")
 
 
 
             # Add a new row to existing table
             def add_row(self,table, cursor):
-                # cols=[]
 
                 columns = self.get_columns(table, cursor)
                 values = []
 
                 for current_column in columns:
-                    print("Adding row.")
+                    print("Log: Executor - Adding row to the table.")
                     entered = input("Enter " + current_column + " : ")
                     entered = "'" + entered + "'"
                     values.append(entered)
@@ -141,16 +155,13 @@ class Executer:
                 cols = ",".join(columns)
                 vals = ",".join(values)
 
-                print("****" + cols)
-                print("####" + vals)
-                # query='insert into ''%s''(%s) values("817450","Test2","0");'%(table,cols)
                 query = 'insert into ''%s''(%s) values(%s);' % (table, cols, vals)
                 cursor.execute(query)
 
 
             # Delete row from table by ID
             def delete_row(table, cursor):
-                print("Delete procedure initiated.")
+                print("Log: Executor - Delete procedure initiated.")
                 id_to_delete = input("Enter the ID of the row: ")
                 query = 'delete  from ''%s'' where id=''%s'';' % (table, id_to_delete)
                 cursor.execute(query)
@@ -158,15 +169,15 @@ class Executer:
 
             # Alters row in the table after finding it by the provided param
             def alter_row(table, cursor, target_column, target_creterea, updated_column, new_value):
-                print("Altering row")
+                print("Log: Executor - Altering table row")
                 query = 'update ''%s'' set %s="%s" where %s="%s";' % (
                     table, updated_column, new_value, target_column, target_creterea)
-                # query='update game set name="Edges" WHERE name="Edge";'
 
                 cursor.execute(query)
 
             #Export a table to Excel
             def excel_all(self,table, cursor,file_name):
+
                 columns = self.get_columns(table, cursor)
 
                 wb = xlwt.Workbook()
@@ -196,6 +207,7 @@ class Executer:
                 wb.save(file_name)
 
 
+            # This class is used to support the feature of table record to object conversion.
             class Dynamic:
                 name = " "
                 properties = []
@@ -205,7 +217,7 @@ class Executer:
                     pass
 
 
-            #Returns one table record as an object
+            #Returns one table record converted to object.
             def to_object(self, table, cursor, line):
                 query = 'select * from ''%s'' where id=''%s'';' % (table, line)
                 cursor.execute(query)
@@ -223,12 +235,10 @@ class Executer:
                 result.properties = columns
                 result.mapped = mapped
 
-                # print(record)
-
                 return result
 
             #Returns a list of tables related to connected DB
-            def show_tables(self,cursor):
+            def show_tables(self, cursor):
 
                 cursor.execute('show tables')
                 tups = cursor.fetchall()
@@ -252,52 +262,7 @@ class Executer:
                 return result
 
 
-            def keeper(self, saved_object):
-                self.saved = saved_object
 
 
 
-            #######################################
 
-#
-# example = Executer()
-# cursor = example.connect_me(hst, usr, pwd, db_name)
-# # print(example.lots_of_eggs(cursor,"game"))
-# example.print_table('game', cursor)
-
-
-            # print (show_tables('game',cursor))
-
-            #
-            # cols=get_columns('game',cursor)
-            #
-            # list_in_line(cols)
-
-            # print(get_columns('game', cursor))
-
-            # add_row('game',cursor)
-
-
-            #
-            # example = to_object('game', cursor, 645450)
-            #
-            # print(example.mapped)
-
-            # excel_all('game',cursor)
-
-            # delete_row('game',cursor)
-
-            # def alter_row(table,cursor,target_column,target_creterea,updated_column,new_value):
-
-            # alter_row('game', cursor, 'name', 'Edges', 'id', '883450')
-            #
-            # print_table('game', cursor)
-
-            # find_by_id('game',cursor,'663250')
-
-            # find_by_param('game',cursor,'name','7 Wonders II')
-
-
-            # name='Paul'
-            # {FORMATING EXAMPLE!}
-            # print("Hello, %s!. Nice to meet you. My name is %s" % (name,'John'))

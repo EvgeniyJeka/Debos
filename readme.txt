@@ -12,6 +12,9 @@ table headers in XLS file will be identical to table headers.
 
 The user also can enter an SQL query manually, an it will be executed (if it's valid).
 
+To run the app open the file Sky.py with Python.
+
+
 
 Screen 1 : Table selection.
 
@@ -21,7 +24,27 @@ When the connection is established the user is presented with DB tables list.
 After one of the tables is selected the user must click on "Select table" button to access it's content.
 
 Screen 2: Table content:
-%pass%
+Contains the content of the selected table, the Command Line and several buttons.
+The Command Line and the buttons are used to receive commands from user.
+
+Buttons list:
+
+1. Clear line - clears the Command Line.
+
+2. Find By Selected Parameter - allows to search the table by one of the selected parameters.
+The column name and the value must be entered to command line while separated by equals sign.
+Example:  name = John
+
+3. Query - executes any valid SQL query entered by user. The query must be entered to Command Line.
+
+4. Order By - orders the table by one of the columns. Column name must be entered to Command Line.
+
+5. Export - exports the currently selected table to XLS file.
+
+6. Show Only - presents only the columns selected by the user. Column names must be entered to Command Line and separated by comma:
+Example: name, city, country
+
+
 
 
 
@@ -36,3 +59,4 @@ The app has 3 modules: "Executor", "Presentor" and "Sky".
 2. Presentor: responsible for creating and managing UI objects. Based mainly on 'tkinter' library.
    'Presentor' instance requires an 'Executor' instance to be initialized.
 
+3. Sky: the main module, gets input from user via UI and executes the required operations.

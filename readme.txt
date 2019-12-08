@@ -44,6 +44,15 @@ Example:  name = John
 6. Show Only - presents only the columns selected by the user. Column names must be entered to Command Line and separated by comma:
 Example: name, city, country
 
+7. Limit - reads the number entered by user to command line and presents the requested amount of records.
+The value must be numeric.
+
+8. Restore - removes all filters and presents the original table.
+
+9. Columns drop down menu - contains the names of all table columns. To add a column name to the Command Line
+select a column and click on "Select" button.
+
+10. Comma - adds comma after the last string in Command Line.
 
 
 

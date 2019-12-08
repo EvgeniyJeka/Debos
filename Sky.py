@@ -1,5 +1,5 @@
 from Executer import *
-from presentor import *
+from Presentor import *
 from tkinter import *
 import Pmw
 

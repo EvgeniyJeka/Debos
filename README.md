@@ -21,7 +21,7 @@ It is recommended to execute the following command to install all requirements:
 
 Screen 1 : Table selection.
 
-<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_1.jpg" alt="Screenshot" width="800" />
+<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_1.jpg" alt="Screenshot" width="500" />
 
 Contains 4 input fields for DB name, IP and credentials.
 Once all of them are filled the user must click the "Connect" button to connect to DB.
@@ -30,7 +30,7 @@ After one of the tables is selected the user must click on "Select table" button
 
 Screen 2: Table content.
 
-<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_2.jpg" alt="Screenshot" width="800" />
+<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_2.jpg" alt="Screenshot" width="700" />
 
 Contains the content of the selected table, the Command Line and several buttons.
 The Command Line and the buttons are used to receive commands from user.

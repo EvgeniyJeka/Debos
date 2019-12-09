@@ -60,7 +60,7 @@ The value must be numeric.
 9. **Columns** drop down menu - contains the names of all table columns. To add a column name to the Command Line
 select a column and click on "**Select**" button.
 
-10. Comma - adds comma after the last string in Command Line.
+10. **Comma** - adds comma after the last string in Command Line.
 
 
 

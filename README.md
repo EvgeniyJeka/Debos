@@ -1,4 +1,4 @@
-DeBos application.
+**DeBos application**.
 
 Desktop application used to present data from MySQL DB to end user.
 The data can be filtered - user can select the table columns that he wants to be presented
@@ -19,7 +19,7 @@ It is recommended to execute the following command to install all requirements:
 "pip install -r requirements.txt"
 
 
-Screen 1 : Table selection.
+**Screen 1 : Table selection**.
 
 <img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_1.jpg" alt="Screenshot" width="500" />
 

@@ -14,6 +14,9 @@ The user also can enter an SQL query manually, an it will be executed (if it's v
 
 To run the app open the file Sky.py with Python.
 
+To launch the application you must have Python 3.6 or newer installed on your PC.
+It is recommended to execute the following command to install all requirements:
+"pip install -r requirements.txt"
 
 
 Screen 1 : Table selection.
@@ -53,8 +56,6 @@ The value must be numeric.
 select a column and click on "Select" button.
 
 10. Comma - adds comma after the last string in Command Line.
-
-
 
 
 

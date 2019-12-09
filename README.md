@@ -64,7 +64,7 @@ select a column and click on "**Select**" button.
 
 
 
-App Design
+**__App Design__**
 
 The app has 3 modules: "Executor", "Presentor" and "Sky" .
 

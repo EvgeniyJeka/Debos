@@ -61,7 +61,7 @@ select a column and click on "Select" button.
 
 App Design
 
-The app has 3 modules: "Executor", "Presentor" and "Sky".
+The app has 3 modules: "Executor", "Presentor" and "Sky" .
 
 1. Executor: responsible for all operations with MySQL DB. Based mainly on 'pysql' library.
    New methods can be added to Executor to support new features for the app.

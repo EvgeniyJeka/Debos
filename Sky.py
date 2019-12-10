@@ -63,7 +63,7 @@ class Sky(object):
         self.entry_3 = Entry(self.root, width="35")
         self.label_3.grid(row=3, column=0, pady=5, padx=1, sticky=W)
         self.entry_3.grid(row=3, column=1, sticky=E)
-        self.entry_3.insert(0, '7417418@a')
+        self.entry_3.insert(0, 'password1')
 
         # Enter the database name
         self.label_4 = Label(self.root, text="Enter DB name: ", fg="blue", font=("", 15))

@@ -1,4 +1,4 @@
-DeBos application.
+**DeBos application**.
 
 Desktop application used to present data from MySQL DB to end user.
 The data can be filtered - user can select the table columns that he wants to be presented
@@ -19,47 +19,52 @@ It is recommended to execute the following command to install all requirements:
 "pip install -r requirements.txt"
 
 
-Screen 1 : Table selection.
+**Screen 1 : Table selection**.
+
+<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_1.jpg" alt="Screenshot" width="500" />
 
 Contains 4 input fields for DB name, IP and credentials.
 Once all of them are filled the user must click the "Connect" button to connect to DB.
 When the connection is established the user is presented with DB tables list.
 After one of the tables is selected the user must click on "Select table" button to access it's content.
 
-Screen 2: Table content:
+**Screen 2: Table content**.
+
+<img src="https://github.com/EvgeniyJeka/Debos/blob/master/Debos_screen_2.jpg" alt="Screenshot" width="700" />
+
 Contains the content of the selected table, the Command Line and several buttons.
 The Command Line and the buttons are used to receive commands from user.
 
 Buttons list:
 
-1. Clear line - clears the Command Line.
+1. **Clear line** - clears the Command Line.
 
-2. Find By Selected Parameter - allows to search the table by one of the selected parameters.
+2. **Find By Selected Parameter** - allows to search the table by one of the selected parameters.
 The column name and the value must be entered to command line while separated by equals sign.
 Example:  name = John
 
-3. Query - executes any valid SQL query entered by user. The query must be entered to Command Line.
+3. **Query** - executes any valid SQL query entered by user. The query must be entered to Command Line.
 
-4. Order By - orders the table by one of the columns. Column name must be entered to Command Line.
+4. **Order By** - orders the table by one of the columns. Column name must be entered to Command Line.
 
-5. Export - exports the currently selected table to XLS file.
+5. **Export** - exports the currently selected table to XLS file.
 
-6. Show Only - presents only the columns selected by the user. Column names must be entered to Command Line and separated by comma:
+6. **Show Only** - presents only the columns selected by the user. Column names must be entered to Command Line and separated by comma:
 Example: name, city, country
 
-7. Limit - reads the number entered by user to command line and presents the requested amount of records.
+7. **Limit** - reads the number entered by user to command line and presents the requested amount of records.
 The value must be numeric.
 
-8. Restore - removes all filters and presents the original table.
+8. **Restore** - removes all filters and presents the original table.
 
-9. Columns drop down menu - contains the names of all table columns. To add a column name to the Command Line
-select a column and click on "Select" button.
+9. **Columns** drop down menu - contains the names of all table columns. To add a column name to the Command Line
+select a column and click on "**Select**" button.
 
-10. Comma - adds comma after the last string in Command Line.
+10. **Comma** - adds comma after the last string in Command Line.
 
 
 
-App Design
+**__App Design__**
 
 The app has 3 modules: "Executor", "Presentor" and "Sky" .
 

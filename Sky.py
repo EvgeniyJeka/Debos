@@ -353,6 +353,12 @@ class Sky(object):
             self.request_input.insert(10,'Invalid Query!')
             return
 
+        except pymysql.InternalError as e:
+
+            self.request_input.delete(0, 'end')
+            self.request_input.insert(10, f'Invalid parameter is used in the query - {e}')
+            return
+
         # Clearing the table to present the result
         for i in self.presentor.tree.get_children():
             self.presentor.tree.delete(i)

@@ -63,14 +63,14 @@ class Sky(object):
         self.entry_3 = Entry(self.root, width="35")
         self.label_3.grid(row=3, column=0, pady=5, padx=1, sticky=W)
         self.entry_3.grid(row=3, column=1, sticky=E)
-        self.entry_3.insert(0, 'password1')
+        self.entry_3.insert(0, '123456')
 
         # Enter the database name
         self.label_4 = Label(self.root, text="Enter DB name: ", fg="blue", font=("", 15))
         self.entry_4 = Entry(self.root, width="35")
         self.label_4.grid(row=4, column=0, pady=5, padx=1, sticky=W)
         self.entry_4.grid(row=4, column=1, sticky=E)
-        self.entry_4.insert(0, 'mysql')
+        self.entry_4.insert(0, 'sys')
 
         # Connect button
         self.button_connect = Button(self.root, text= "Connect", bg="purple", fg="white", height="2",width="10", command = lambda:self.connect())

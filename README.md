@@ -18,6 +18,10 @@ To launch the application you must have Python 3.6 or newer installed on your PC
 It is recommended to execute the following command to install all requirements:
 "pip install -r requirements.txt"
 
+<b>NOTE: To test the application you can fetch an image of MySQL server DB and run it 
+with 'docker-compose up', providing there is a running Docker application on your PC</b>
+
+Providing MySQL server is running you can use the 'Debos' app to connect to it.   
 
 **Screen 1 : Table selection**.
 
